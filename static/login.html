@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Login CW — Events Analysis</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <div class="layout layout-wide">
+    <header class="header">
+      <h1>Events Analysis — Acesso CW</h1>
+      <p class="tagline">Entre com sua conta CW para verificar as análises enviadas pelos proponentes.</p>
+    </header>
+
+    <main class="main">
+      <div class="card form-card login-card">
+        <h2>Login</h2>
+        <form id="form-login" class="form">
+          <label for="username">Usuário</label>
+          <input type="text" id="username" name="username" required autocomplete="username" placeholder="Conta CW" />
+          <label for="password">Senha</label>
+          <input type="password" id="password" name="password" required autocomplete="current-password" placeholder="Senha" />
+          <button type="submit" class="btn-submit" id="btn-login">Entrar</button>
+        </form>
+        <div id="login-erro" class="error-message" hidden></div>
+      </div>
+      <p class="login-link"><a href="/">Voltar ao envio de dados (proponente)</a></p>
+    </main>
+  </div>
+  <script src="/static/login.js"></script>
+</body>
+</html>

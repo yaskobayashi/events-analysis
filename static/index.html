@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Seleção de Projetos CW — Events Analysis</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <div class="layout layout-wide">
+    <header class="header">
+      <h1>Seleção de Projetos CW</h1>
+      <div class="welcome-block">
+        <p class="welcome-text">Boas-vindas e agradecimento pelo interesse na parceria com a CW.</p>
+        <p class="explain-text">Esta é uma primeira etapa de avaliação e seleção de projetos que eventualmente estão alinhados ao core de responsabilidade social da CW, e que <strong>não necessariamente serão apoiados</strong>.</p>
+      </div>
+    </header>
+
+    <main class="main">
+      <form id="form-projeto-cw" class="form form-projeto-cw">
+        <section class="form-section-block">
+          <h2>Institucional</h2>
+          <label for="nome_organizacao">Nome da Organização *</label>
+          <input type="text" id="nome_organizacao" name="nome_organizacao" required placeholder="Nome da organização" />
+          <label for="cnpj">CNPJ</label>
+          <input type="text" id="cnpj" name="cnpj" placeholder="00.000.000/0000-00" />
+          <label for="nome_responsavel">Nome do responsável pelo preenchimento *</label>
+          <input type="text" id="nome_responsavel" name="nome_responsavel" required placeholder="Nome completo" />
+          <label for="cargo_funcao">Cargo/função</label>
+          <input type="text" id="cargo_funcao" name="cargo_funcao" placeholder="Ex: Coordenador de projetos" />
+          <label for="email">E-mail *</label>
+          <input type="email" id="email" name="email" required placeholder="email@organizacao.org" />
+          <label for="celular_telefone">Celular e ou telefone fixo</label>
+          <input type="text" id="celular_telefone" name="celular_telefone" placeholder="(00) 00000-0000" />
+        </section>
+
+        <section class="form-section-block">
+          <h2>Projeto</h2>
+          <label for="nome_projeto">Nome do projeto *</label>
+          <input type="text" id="nome_projeto" name="nome_projeto" required placeholder="Nome do projeto" />
+          <p class="label-block">Área focal do projeto <span class="hint">(pode marcar mais de uma)</span></p>
+          <div class="checkbox-group" id="area_focal">
+            <label class="checkbox-label"><input type="checkbox" name="area_focal" value="Assistência Social (contraturnos, apoio a famílias e comunidades, SAICAS)" /> Assistência Social (contraturnos, apoio a famílias e comunidades, SAICAS)</label>
+            <label class="checkbox-label"><input type="checkbox" name="area_focal" value="Capacitação técnica/ profissional" /> Capacitação técnica/ profissional</label>
+            <label class="checkbox-label"><input type="checkbox" name="area_focal" value="Cultura" /> Cultura</label>
+            <label class="checkbox-label"><input type="checkbox" name="area_focal" value="Educação" /> Educação</label>
+            <label class="checkbox-label"><input type="checkbox" name="area_focal" value="Empregabilidade" /> Empregabilidade</label>
+            <label class="checkbox-label"><input type="checkbox" name="area_focal" value="Esportes" /> Esportes</label>
+            <label class="checkbox-label"><input type="checkbox" name="area_focal" value="Formação de educadores/ professores e ou equipes" /> Formação de educadores/ professores e ou equipes</label>
+            <label class="checkbox-label"><input type="checkbox" name="area_focal" value="Meio ambiente" /> Meio ambiente</label>
+            <label class="checkbox-label"><input type="checkbox" name="area_focal" value="Saúde" /> Saúde</label>
+          </div>
+          <p class="label-block">Público atendido (beneficiários) <span class="hint">(pode marcar mais de uma)</span></p>
+          <p class="hint-small">Para efeitos das políticas públicas no Brasil: crianças até 12 anos incompletos; adolescentes entre 12 e 18 anos; jovens (Estatuto da Juventude) entre 15 e 29 anos; idosos acima de 60 anos.</p>
+          <div class="checkbox-group" id="publico_atendido">
+            <label class="checkbox-label"><input type="checkbox" name="publico_atendido" value="Crianças" /> Crianças</label>
+            <label class="checkbox-label"><input type="checkbox" name="publico_atendido" value="Adolescentes" /> Adolescentes</label>
+            <label class="checkbox-label"><input type="checkbox" name="publico_atendido" value="Jovens" /> Jovens</label>
+            <label class="checkbox-label"><input type="checkbox" name="publico_atendido" value="Jovens adultos" /> Jovens adultos</label>
+            <label class="checkbox-label"><input type="checkbox" name="publico_atendido" value="Adultos" /> Adultos</label>
+            <label class="checkbox-label"><input type="checkbox" name="publico_atendido" value="Idosos" /> Idosos</label>
+          </div>
+          <label for="local_estado">Local(is) de execução — Estado</label>
+          <input type="text" id="local_estado" name="local_estado" placeholder="Ex: SP" />
+          <label for="local_cidades">Cidades</label>
+          <input type="text" id="local_cidades" name="local_cidades" placeholder="Ex: São Paulo, Campinas" />
+        </section>
+
+        <section class="form-section-block">
+          <h2>Objetivos do projeto e resultados esperados</h2>
+          <label for="objetivo_geral">Objetivo geral</label>
+          <textarea id="objetivo_geral" name="objetivo_geral" rows="3" placeholder="Descreva o objetivo geral do projeto"></textarea>
+          <div class="objetivo-par">
+            <label>Objetivo específico 1 – resultado esperado</label>
+            <input type="text" id="objetivo_1" name="objetivo_1" placeholder="Objetivo 1" />
+            <input type="text" id="resultado_1" name="resultado_1" placeholder="Resultado esperado 1" />
+          </div>
+          <div class="objetivo-par">
+            <label>Objetivo específico 2 – resultado esperado</label>
+            <input type="text" id="objetivo_2" name="objetivo_2" placeholder="Objetivo 2" />
+            <input type="text" id="resultado_2" name="resultado_2" placeholder="Resultado esperado 2" />
+          </div>
+          <div class="objetivo-par">
+            <label>Objetivo específico 3 – resultado esperado</label>
+            <input type="text" id="objetivo_3" name="objetivo_3" placeholder="Objetivo 3" />
+            <input type="text" id="resultado_3" name="resultado_3" placeholder="Resultado esperado 3" />
+          </div>
+          <div class="objetivo-par">
+            <label>Objetivo específico 4 – resultado esperado</label>
+            <input type="text" id="objetivo_4" name="objetivo_4" placeholder="Objetivo 4" />
+            <input type="text" id="resultado_4" name="resultado_4" placeholder="Resultado esperado 4" />
+          </div>
+          <div class="objetivo-par">
+            <label>Objetivo específico 5 – resultado esperado</label>
+            <input type="text" id="objetivo_5" name="objetivo_5" placeholder="Objetivo 5" />
+            <input type="text" id="resultado_5" name="resultado_5" placeholder="Resultado esperado 5" />
+          </div>
+          <div class="objetivo-par">
+            <label>Objetivo específico 6 – resultado esperado</label>
+            <input type="text" id="objetivo_6" name="objetivo_6" placeholder="Objetivo 6" />
+            <input type="text" id="resultado_6" name="resultado_6" placeholder="Resultado esperado 6" />
+          </div>
+        </section>
+
+        <section class="form-section-block">
+          <h2>Investimento</h2>
+          <p class="label-block">O projeto foi aprovado em alguma lei de incentivo?</p>
+          <div class="radio-group">
+            <label class="radio-label"><input type="radio" name="lei_incentivo" value="nao" checked /> Não</label>
+            <label class="radio-label"><input type="radio" name="lei_incentivo" value="sim" /> Sim</label>
+          </div>
+          <div id="bloco-valor-direto" class="conditional-block">
+            <p class="hint-small">Se não é via incentivo fiscal, a solicitação seria para aporte direto.</p>
+            <label for="valor_direto">Qual valor (R$)</label>
+            <input type="text" id="valor_direto" name="valor_direto" placeholder="Ex: 50.000,00" />
+          </div>
+          <div id="bloco-lei-incentivo" class="conditional-block" hidden>
+            <p class="label-block">Se sim, qual(is):</p>
+            <div class="checkbox-group" id="leis">
+              <label class="checkbox-label"><input type="checkbox" name="leis" value="Criança e Adolescente" /> Criança e Adolescente</label>
+              <label class="checkbox-label"><input type="checkbox" name="leis" value="Cultura (Rouanet)" /> Cultura (Rouanet)</label>
+              <label class="checkbox-label"><input type="checkbox" name="leis" value="Esportes" /> Esportes</label>
+              <label class="checkbox-label"><input type="checkbox" name="leis" value="Idosos" /> Idosos</label>
+              <label class="checkbox-label"><input type="checkbox" name="leis" value="ProAc" /> ProAc</label>
+              <label class="checkbox-label"><input type="checkbox" name="leis" value="PROMAC" /> PROMAC</label>
+              <label class="checkbox-label"><input type="checkbox" name="leis" value="Pronas" /> Pronas</label>
+              <label class="checkbox-label"><input type="checkbox" name="leis" value="Pronon" /> Pronon</label>
+            </div>
+            <label for="valor_total_captacao">Valor total estipulado pela autorização de captação (R$)</label>
+            <input type="text" id="valor_total_captacao" name="valor_total_captacao" placeholder="Ex: 100.000,00" />
+            <label for="data_limite_captacao">Data limite para captação</label>
+            <input type="date" id="data_limite_captacao" name="data_limite_captacao" />
+            <label for="certificado_file">Certificado de Autorização para Captação (CAC) ou Diário Oficial</label>
+            <input type="file" id="certificado_file" name="certificado_file" accept=".pdf,.jpg,.jpeg,.png" />
+          </div>
+        </section>
+
+        <button type="submit" class="btn-submit" id="btn-submit">Enviar</button>
+      </form>
+
+      <div id="sucesso" class="card success-card" hidden>
+        <h2>Dados recebidos</h2>
+        <p class="success-message" id="sucesso-mensagem">Seus dados foram recebidos. Nossa equipe verificará e entrará em contato se necessário.</p>
+        <button type="button" class="btn-secondary" id="btn-outro">Enviar outro</button>
+      </div>
+
+      <div id="erro" class="card error-card" hidden>
+        <p class="error-message" id="erro-mensagem"></p>
+        <button type="button" class="btn-secondary" id="btn-fechar-erro">Fechar</button>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <a href="https://github.com/yaskobayashi/events-analysis">events-analysis</a> — Seleção de Projetos CW.
+      <br /><a href="/login" class="footer-cw">Acesso CW (equipe)</a>
+    </footer>
+  </div>
+  <script src="/static/app.js"></script>
+</body>
+</html>

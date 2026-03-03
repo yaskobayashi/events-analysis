@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Análises — Events Analysis (CW)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <div class="layout layout-wide">
+    <header class="header cw-header">
+      <h1>Análises enviadas</h1>
+      <div class="cw-actions">
+        <span class="tagline" id="user-info"></span>
+        <button type="button" class="btn-secondary" id="btn-logout">Sair</button>
+      </div>
+    </header>
+
+    <main class="main">
+      <div id="loading" class="card">Carregando…</div>
+      <div id="list-wrap" class="submissions-list" hidden></div>
+      <div id="empty" class="card submission-empty" hidden>Nenhum envio ainda.</div>
+    </main>
+  </div>
+  <script src="/static/analises.js"></script>
+</body>
+</html>
