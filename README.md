@@ -39,6 +39,20 @@ PYTHONPATH=. uvicorn app.main:app --host 0.0.0.0 --port 8000
 
 Se não definir `CW_USER` e `CW_PASSWORD`, o padrão de desenvolvimento é usuário e senha **cw** (apenas para testes).
 
+### Base de conhecimento (KB) e análise por IA
+
+A análise detalhada dos projetos (pontos positivos, pontos negativos, riscos, probabilidade de patrocínio) usa o PDF **Guide CloudWalk Social 2025** como base de conhecimento. O arquivo fica em `knowledge_base/Guide_CloudWalk_Social_2025.pdf`.
+
+Para ativar a análise por IA (OpenAI), defina a variável de ambiente:
+
+```bash
+export OPENAI_API_KEY=sua_chave_aqui
+```
+
+Opcional: `OPENAI_MODEL` (padrão: `gpt-4o-mini`).
+
+Sem `OPENAI_API_KEY`, o envio continua funcionando; apenas o resumo automático (sem IA) é exibido na área CW.
+
 ## Instalação
 
 ```bash

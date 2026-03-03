@@ -603,6 +603,98 @@ input[type="file"] {
   margin-top: 0.5rem;
 }
 
+.analise-ia-block {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+
+.analise-sec {
+  margin-top: 0.75rem;
+  font-size: 0.9rem;
+}
+
+.analise-sec strong {
+  display: block;
+  margin-bottom: 0.35rem;
+  color: var(--text);
+}
+
+.analise-list {
+  margin: 0;
+  padding-left: 1.25rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.analise-sec.analise-neg .analise-list {
+  color: var(--score-low);
+}
+
+.analise-sec.analise-riscos .analise-list {
+  color: var(--score-mid);
+}
+
+.analise-sec.analise-faltantes strong {
+  color: var(--text-muted);
+}
+
+.analise-sec.analise-faltantes .analise-list {
+  color: var(--accent);
+}
+
+.form-pdf-simple .opcional {
+  font-weight: 400;
+  color: var(--text-muted);
+  font-size: 0.85em;
+}
+
+.form-alt-link {
+  margin-top: 1.5rem;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.form-alt-link a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.form-alt-link a:hover {
+  text-decoration: underline;
+}
+
+.link-card {
+  text-align: center;
+  padding: 2rem;
+}
+
+.link-card h2 {
+  margin-top: 0;
+}
+
+.link-card p {
+  margin-bottom: 1.25rem;
+  color: var(--text-muted);
+}
+
+.btn-link-external {
+  display: inline-block;
+  padding: 0.85rem 1.5rem;
+  background: var(--accent);
+  color: var(--text-on-accent);
+  border-radius: var(--radius-sm);
+  font-family: var(--font);
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+
+.btn-link-external:hover {
+  background: var(--accent-hover);
+}
+
 .submission-empty {
   text-align: center;
   color: var(--text-muted);

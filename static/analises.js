@@ -2,8 +2,6 @@
   const loading = document.getElementById("loading");
   const listWrap = document.getElementById("list-wrap");
   const empty = document.getElementById("empty");
-  const userInfo = document.getElementById("user-info");
-  const btnLogout = document.getElementById("btn-logout");
 
   function scoreClass(p) {
     if (p >= 70) return "alta";
@@ -41,16 +39,35 @@
     certificado: "Certificado (CAC/DO)",
   };
 
+  function listItems(arr) {
+    if (!arr || !arr.length) return "";
+    return "<ul class='analise-list'>" + arr.map(function (x) { return "<li>" + escapeHtml(x) + "</li>"; }).join("") + "</ul>";
+  }
+
   function renderProjetoCW(s) {
     var d = s.dados || {};
     var dataStr = formatDate(s.created_at);
     var nomeProjeto = d.nome_projeto || "—";
     var nomeOrg = d.nome_organizacao || "—";
     var resumo = s.resumo_ai || "";
+    var prob = s.probabilidade_patrocinio;
+    var hasAnalise = prob != null || (s.pontos_positivos && s.pontos_positivos.length) || (s.pontos_negativos && s.pontos_negativos.length) || (s.riscos && s.riscos.length);
+    var probCl = prob != null ? scoreClass(prob) : "";
     var html = "<h3>" + escapeHtml(nomeProjeto) + " <span class='tipo-badge'>Projeto CW</span></h3>" +
-      "<div class='submission-meta'>" + escapeHtml(nomeOrg) + " — Enviado em " + escapeHtml(dataStr) + "</div>" +
-      (resumo ? "<div class='submission-resumo'>" + escapeHtml(resumo) + "</div>" : "") +
-      "<details class='submission-details'><summary>Ver todos os dados</summary><div class='detail-sections'></div></details>";
+      "<div class='submission-meta'>" + escapeHtml(nomeOrg) + " — Enviado em " + escapeHtml(dataStr) + "</div>";
+    if (hasAnalise) {
+      html += "<div class='analise-ia-block'>";
+      if (prob != null) html += "<div class='submission-score " + probCl + "'>Probabilidade de patrocínio: " + prob + "%</div>";
+      if (resumo) html += "<div class='submission-resumo'>" + escapeHtml(resumo) + "</div>";
+      if (s.pontos_positivos && s.pontos_positivos.length) html += "<div class='analise-sec'><strong>Pontos positivos</strong>" + listItems(s.pontos_positivos) + "</div>";
+      if (s.pontos_negativos && s.pontos_negativos.length) html += "<div class='analise-sec analise-neg'><strong>Pontos negativos</strong>" + listItems(s.pontos_negativos) + "</div>";
+      if (s.riscos && s.riscos.length) html += "<div class='analise-sec analise-riscos'><strong>Riscos</strong>" + listItems(s.riscos) + "</div>";
+      if (s.dados_faltantes && s.dados_faltantes.length) html += "<div class='analise-sec analise-faltantes'><strong>Dados que faltam para analisar melhor</strong>" + listItems(s.dados_faltantes) + "</div>";
+      html += "</div>";
+    } else if (resumo) {
+      html += "<div class='submission-resumo'>" + escapeHtml(resumo) + "</div>";
+    }
+    html += "<details class='submission-details'><summary>Ver todos os dados do formulário</summary><div class='detail-sections'></div></details>";
     var el = document.createElement("div");
     el.className = "submission-item card submission-projeto-cw";
     el.innerHTML = html;
@@ -101,7 +118,40 @@
     return el;
   }
 
+  function renderProjetoPDF(s) {
+    var d = s.dados || {};
+    var dataStr = formatDate(s.created_at);
+    var nome = d.nome_proponente || "—";
+    var email = d.email_proponente || "";
+    var pdfNome = d.pdf_nome || "PDF";
+    var resumo = s.resumo_ai || "";
+    var prob = s.probabilidade_patrocinio;
+    var hasAnalise = prob != null || (s.pontos_positivos && s.pontos_positivos.length) || (s.pontos_negativos && s.pontos_negativos.length) || (s.riscos && s.riscos.length);
+    var probCl = prob != null ? scoreClass(prob) : "";
+    var html = "<h3>Projeto enviado em PDF <span class='tipo-badge'>PDF</span></h3>" +
+      "<div class='submission-meta'>" + escapeHtml(pdfNome) + (email ? " — " + escapeHtml(email) : "") + " — Enviado em " + escapeHtml(dataStr) + "</div>";
+    if (hasAnalise) {
+      html += "<div class='analise-ia-block'>";
+      if (prob != null) html += "<div class='submission-score " + probCl + "'>Probabilidade de patrocínio: " + prob + "%</div>";
+      if (resumo) html += "<div class='submission-resumo'>" + escapeHtml(resumo) + "</div>";
+      if (s.pontos_positivos && s.pontos_positivos.length) html += "<div class='analise-sec'><strong>Pontos positivos</strong>" + listItems(s.pontos_positivos) + "</div>";
+      if (s.pontos_negativos && s.pontos_negativos.length) html += "<div class='analise-sec analise-neg'><strong>Pontos negativos</strong>" + listItems(s.pontos_negativos) + "</div>";
+      if (s.riscos && s.riscos.length) html += "<div class='analise-sec analise-riscos'><strong>Riscos</strong>" + listItems(s.riscos) + "</div>";
+      if (s.dados_faltantes && s.dados_faltantes.length) html += "<div class='analise-sec analise-faltantes'><strong>Dados que faltam para analisar melhor</strong>" + listItems(s.dados_faltantes) + "</div>";
+      html += "</div>";
+    } else if (resumo) {
+      html += "<div class='submission-resumo'>" + escapeHtml(resumo) + "</div>";
+    }
+    return html;
+  }
+
   function renderSubmission(s) {
+    if (s.tipo === "projeto_pdf") {
+      var el = document.createElement("div");
+      el.className = "submission-item card submission-projeto-cw";
+      el.innerHTML = renderProjetoPDF(s);
+      return el;
+    }
     if (s.tipo === "projeto_cw") return renderProjetoCW(s);
     var tipoLabel = s.tipo === "evento" ? "Evento" : "Projeto";
     var nome = (s.dados && s.dados.nome) ? s.dados.nome : "—";
@@ -131,24 +181,8 @@
     listWrap.hidden = true;
     empty.hidden = true;
 
-    fetch("/api/me", { credentials: "same-origin" })
-      .then(function (r) { return r.json(); })
-      .then(function (me) {
-        if (!me.logged_in) {
-          window.location.href = "/login";
-          return;
-        }
-        if (me.username) userInfo.textContent = "Olá, " + me.username;
-      });
-
-    fetch("/api/submissions", { credentials: "same-origin" })
-      .then(function (res) {
-        if (res.status === 401) {
-          window.location.href = "/login";
-          return new Promise(function () {}); /* não continua */
-        }
-        return res.json();
-      })
+    fetch("/api/submissions")
+      .then(function (res) { return res.json(); })
       .then(function (data) {
         loading.hidden = true;
         var list = (data && data.submissions) ? data.submissions : [];
@@ -168,11 +202,6 @@
         empty.textContent = "Erro ao carregar. Verifique se está logado.";
       });
   }
-
-  btnLogout.addEventListener("click", function () {
-    fetch("/api/logout", { method: "POST", credentials: "same-origin" })
-      .then(function () { window.location.href = "/login"; });
-  });
 
   load();
 })();

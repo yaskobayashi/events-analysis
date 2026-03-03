@@ -8,7 +8,7 @@ import secrets
 from datetime import date, datetime
 from pathlib import Path
 
-from fastapi import FastAPI, HTTPException, Depends, Request, Response
+from fastapi import FastAPI, HTTPException, Depends, Request, File, UploadFile, Form
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse, JSONResponse
 from pydantic import BaseModel, Field
@@ -257,9 +257,97 @@ def submit_projeto_cw(item: ProjetoCWInput):
             "tipo": "projeto_cw",
             "dados": dados,
             "resumo_ai": resumo,
+            "pontos_positivos": [],
+            "pontos_negativos": [],
+            "riscos": [],
+            "probabilidade_patrocinio": None,
         }
+        try:
+            from .ai_analysis import analisar_com_ia
+            analise_ia = analisar_com_ia(dados)
+            if analise_ia:
+                submission["pontos_positivos"] = analise_ia.get("pontos_positivos") or []
+                submission["pontos_negativos"] = analise_ia.get("pontos_negativos") or []
+                submission["riscos"] = analise_ia.get("riscos") or []
+                submission["probabilidade_patrocinio"] = analise_ia.get("probabilidade_patrocinio")
+                if analise_ia.get("resumo_ai"):
+                    submission["resumo_ai"] = analise_ia["resumo_ai"]
+        except Exception:
+            pass
         SUBMISSIONS.append(submission)
         return {"success": True, "message": "Seus dados foram recebidos. Nossa equipe verificará e entrará em contato se necessário."}
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+def _extrair_texto_pdf(file_path: Path) -> str:
+    """Extrai texto de um PDF."""
+    try:
+        from pypdf import PdfReader
+        reader = PdfReader(str(file_path))
+        parts = []
+        for page in reader.pages:
+            t = page.extract_text()
+            if t:
+                parts.append(t)
+        return "\n\n".join(parts)
+    except Exception:
+        return ""
+
+
+@app.post("/api/submit-projeto-pdf")
+async def submit_projeto_pdf(
+    pdf: UploadFile = File(..., description="PDF do projeto"),
+    nome: str = Form(""),
+    email: str = Form(""),
+):
+    """
+    Proponente envia apenas o PDF do projeto (estilo Google Form).
+    IA analisa com a KB e devolve análise + dados faltantes. Proponente não vê o resultado.
+    """
+    if not pdf.filename or not pdf.filename.lower().endswith(".pdf"):
+        raise HTTPException(status_code=400, detail="Envie um arquivo PDF.")
+    try:
+        uploads_dir = Path(__file__).resolve().parent.parent / "uploads"
+        uploads_dir.mkdir(exist_ok=True)
+        safe_name = "".join(c for c in pdf.filename if c.isalnum() or c in "._- ")[:80]
+        unique = secrets.token_hex(4)
+        pdf_path = uploads_dir / f"projeto_{unique}_{safe_name}.pdf"
+        content = await pdf.read()
+        if len(content) > 15 * 1024 * 1024:  # 15 MB
+            raise HTTPException(status_code=400, detail="PDF muito grande. Máximo 15 MB.")
+        pdf_path.write_bytes(content)
+        texto = _extrair_texto_pdf(pdf_path)
+        dados = {"nome_proponente": nome.strip(), "email_proponente": email.strip(), "pdf_nome": pdf.filename}
+        submission = {
+            "id": secrets.token_hex(8),
+            "created_at": datetime.utcnow().isoformat() + "Z",
+            "tipo": "projeto_pdf",
+            "dados": dados,
+            "resumo_ai": "",
+            "pontos_positivos": [],
+            "pontos_negativos": [],
+            "riscos": [],
+            "probabilidade_patrocinio": None,
+            "dados_faltantes": [],
+        }
+        try:
+            from .ai_analysis import analisar_pdf_projeto
+            analise = analisar_pdf_projeto(texto, nome.strip(), email.strip())
+            if analise:
+                submission["pontos_positivos"] = analise.get("pontos_positivos") or []
+                submission["pontos_negativos"] = analise.get("pontos_negativos") or []
+                submission["riscos"] = analise.get("riscos") or []
+                submission["probabilidade_patrocinio"] = analise.get("probabilidade_patrocinio")
+                submission["dados_faltantes"] = analise.get("dados_faltantes") or []
+                if analise.get("resumo_ai"):
+                    submission["resumo_ai"] = analise["resumo_ai"]
+        except Exception:
+            pass
+        SUBMISSIONS.append(submission)
+        return {"success": True, "message": "Seu projeto foi recebido e está em análise. Nossa equipe verificará e entrará em contato se necessário."}
     except HTTPException:
         raise
     except Exception as e:
@@ -306,8 +394,8 @@ def me(request: Request):
 
 
 @app.get("/api/submissions")
-def listar_submissions(_: str = Depends(_get_current_user)):
-    """Lista todos os envios com análise. Apenas para usuários CW logados."""
+def listar_submissions():
+    """Lista todos os envios com análise. Acesso aberto para quem tiver o link."""
     return {"submissions": list(reversed(SUBMISSIONS))}
 
 
@@ -328,6 +416,11 @@ def login_page():
 @app.get("/analises")
 def analises_page():
     return FileResponse(static_dir / "analises.html")
+
+
+@app.get("/formulario-completo")
+def formulario_completo_page():
+    return FileResponse(static_dir / "formulario-completo.html")
 
 
 if static_dir.exists():
