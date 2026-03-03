@@ -1,19 +1,45 @@
+/* CERA PRO: coloque os arquivos .woff2 em /static/fonts/ e descomente:
+@font-face {
+  font-family: "CERA PRO";
+  src: url("/static/fonts/CeraPro-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: "CERA PRO";
+  src: url("/static/fonts/CeraPro-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+}
+@font-face {
+  font-family: "CERA PRO";
+  src: url("/static/fonts/CeraPro-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+}
+*/
 :root {
-  --bg: #0f1419;
-  --bg-card: #1a2332;
-  --bg-input: #252d3a;
-  --border: #2d3a4d;
-  --text: #e6edf3;
-  --text-muted: #8b9cb3;
-  --accent: #3fb950;
-  --accent-dim: #238636;
-  --score-high: #3fb950;
-  --score-mid: #d29922;
-  --score-low: #f85149;
-  --font: "Outfit", system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", monospace;
-  --radius: 12px;
-  --shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  --bg-top: #d4cee8;
+  --bg-bottom: #5c4d7a;
+  --bg-card: rgba(255, 255, 255, 0.95);
+  --bg-input: rgba(255, 255, 255, 0.9);
+  --border: rgba(92, 77, 122, 0.25);
+  --border-card: rgba(255, 255, 255, 0.4);
+  --text: #2d2640;
+  --text-muted: #5c4d7a;
+  --text-on-accent: #fff;
+  --accent: #4a7fb8;
+  --accent-hover: #5b9bd5;
+  --accent-dim: #6b5b8a;
+  --score-high: #4a7fb8;
+  --score-mid: #c9a227;
+  --score-low: #c45c5c;
+  --font: "CERA PRO", "Plus Jakarta Sans", system-ui, sans-serif;
+  --font-mono: "Plus Jakarta Sans", system-ui, sans-serif;
+  --radius: 16px;
+  --radius-sm: 12px;
+  --shadow: 0 12px 40px rgba(45, 38, 64, 0.15);
+  --shadow-card: 0 8px 32px rgba(92, 77, 122, 0.12);
 }
 
 *,
@@ -25,11 +51,39 @@
 body {
   margin: 0;
   min-height: 100vh;
-  background: var(--bg);
+  background: linear-gradient(180deg, var(--bg-top) 0%, #9d8fb8 35%, var(--bg-bottom) 100%);
+  background-attachment: fixed;
   color: var(--text);
   font-family: var(--font);
   font-size: 16px;
   line-height: 1.6;
+  position: relative;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  top: -20%;
+  right: -15%;
+  width: 60vmin;
+  height: 60vmin;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(74, 127, 184, 0.15) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  bottom: -10%;
+  left: -10%;
+  width: 40vmin;
+  height: 40vmin;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(92, 77, 122, 0.2) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
 }
 
 .layout {
@@ -39,6 +93,8 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  position: relative;
+  z-index: 1;
 }
 
 .header {
@@ -65,11 +121,12 @@ body {
 
 .card {
   background: var(--bg-card);
-  border: 1px solid var(--border);
+  border: 1px solid var(--border-card);
   border-radius: var(--radius);
   padding: 1.5rem;
   margin-bottom: 1.5rem;
-  box-shadow: var(--shadow);
+  box-shadow: var(--shadow-card);
+  backdrop-filter: blur(8px);
 }
 
 .form-card .tabs {
@@ -87,19 +144,19 @@ body {
   font-family: var(--font);
   font-size: 0.9rem;
   font-weight: 500;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
   transition: background 0.2s, color 0.2s, border-color 0.2s;
 }
 
 .tab:hover {
   color: var(--text);
-  border-color: #3d4d66;
+  border-color: var(--accent);
 }
 
 .tab.active {
-  background: var(--accent-dim);
-  color: #fff;
+  background: var(--accent);
+  color: var(--text-on-accent);
   border-color: var(--accent);
 }
 
@@ -126,11 +183,11 @@ body {
   padding: 0.65rem 0.85rem;
   background: var(--bg-input);
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   color: var(--text);
   font-family: var(--font);
   font-size: 0.95rem;
-  transition: border-color 0.2s;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .form input::placeholder,
@@ -144,6 +201,7 @@ body {
 .form textarea:focus {
   outline: none;
   border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(74, 127, 184, 0.2);
 }
 
 .form textarea {
@@ -272,18 +330,19 @@ input[type="file"] {
   width: 100%;
   padding: 0.85rem 1.25rem;
   background: var(--accent);
-  color: #fff;
+  color: var(--text-on-accent);
   border: none;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   font-family: var(--font);
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
   transition: background 0.2s, transform 0.1s;
+  letter-spacing: 0.02em;
 }
 
 .btn-submit:hover {
-  background: #46c758;
+  background: var(--accent-hover);
 }
 
 .btn-submit:active {
@@ -298,7 +357,7 @@ input[type="file"] {
 /* Sucesso (proponente) */
 .success-card {
   border-color: var(--accent);
-  background: rgba(63, 185, 80, 0.06);
+  background: rgba(74, 127, 184, 0.08);
 }
 
 .success-card h2 {
@@ -377,8 +436,8 @@ input[type="file"] {
 .analise-detalhes pre {
   margin: 0.75rem 0 0 0;
   padding: 1rem;
-  background: var(--bg);
-  border-radius: 8px;
+  background: rgba(92, 77, 122, 0.08);
+  border-radius: var(--radius-sm);
   font-family: var(--font-mono);
   font-size: 0.75rem;
   overflow-x: auto;
@@ -392,27 +451,28 @@ input[type="file"] {
   background: transparent;
   color: var(--text-muted);
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   font-family: var(--font);
   font-size: 0.9rem;
   cursor: pointer;
-  transition: color 0.2s, border-color 0.2s;
+  transition: color 0.2s, border-color 0.2s, background 0.2s;
 }
 
 .btn-secondary:hover {
   color: var(--text);
-  border-color: var(--text-muted);
+  border-color: var(--accent);
+  background: rgba(74, 127, 184, 0.06);
 }
 
 /* Erro */
 .error-card {
   border-color: var(--score-low);
-  background: rgba(248, 81, 73, 0.06);
+  background: rgba(196, 92, 92, 0.1);
 }
 
 .error-message {
   margin: 0 0 1rem 0;
-  color: #f85149;
+  color: var(--score-low);
   font-size: 0.9rem;
 }
 
@@ -506,9 +566,11 @@ input[type="file"] {
 
 .submission-item {
   background: var(--bg-card);
-  border: 1px solid var(--border);
+  border: 1px solid var(--border-card);
   border-radius: var(--radius);
   padding: 1.25rem;
+  box-shadow: var(--shadow-card);
+  backdrop-filter: blur(8px);
 }
 
 .submission-item h3 {
@@ -551,9 +613,9 @@ input[type="file"] {
   font-size: 0.75rem;
   font-weight: 500;
   color: var(--text-muted);
-  background: var(--bg-input);
+  background: rgba(92, 77, 122, 0.15);
   padding: 0.2rem 0.5rem;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   margin-left: 0.5rem;
 }
 
@@ -572,6 +634,11 @@ input[type="file"] {
   margin-top: 1rem;
   padding-top: 0.75rem;
   border-top: 1px solid var(--border);
+}
+
+/* Ajuste header em fundo claro do gradiente */
+.header h1 {
+  letter-spacing: 0.01em;
 }
 
 .detail-section h4 {
