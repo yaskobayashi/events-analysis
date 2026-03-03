@@ -1,12 +1,17 @@
 """
 API e servidor do site events-analysis.
-Proponente envia dados e não vê a análise; apenas contas CW podem fazer login e ver as análises.
+Proponente envia dados e não vê a análise; análise visível para quem tiver o link.
 """
+
+from pathlib import Path
+from dotenv import load_dotenv
+
+# Carrega .env da raiz do projeto (OPENAI_API_KEY, etc.)
+load_dotenv(Path(__file__).resolve().parent.parent / ".env")
 
 import os
 import secrets
 from datetime import date, datetime
-from pathlib import Path
 
 from fastapi import FastAPI, HTTPException, Depends, Request, File, UploadFile, Form
 from fastapi.staticfiles import StaticFiles
